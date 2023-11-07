@@ -35,6 +35,8 @@ public class HostsDao{
 		return instance;
 	}
 	
+	// insert - load local csv to this object
+	
 	public Hosts create(Hosts host) throws SQLException {
 		String insertHost = "INSERT INTO Hosts(HostId,HostUrl,HostName, HostSince, HostResponseTime, HostResponseRate, HostTotalListingCount, HostVerification) "
 				+ "  VALUES(?,?,?,?,?,?,?,?);";
@@ -170,6 +172,8 @@ public class HostsDao{
 		}
 		return hosts;
 	}
+	
+	
 	
 	
 	public Hosts delete(Hosts host) throws SQLException {
