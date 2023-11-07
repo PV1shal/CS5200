@@ -35,6 +35,8 @@ public class HostsDao{
 		return instance;
 	}
 	
+	
+	// here is create function for Host
 	// insert - load local csv to this object
 	
 	public Hosts create(Hosts host) throws SQLException {
