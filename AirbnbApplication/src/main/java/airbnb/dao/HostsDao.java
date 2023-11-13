@@ -124,7 +124,7 @@ public class HostsDao{
 		return null;
 	}
 	
-	
+
 	public List<Hosts> getHostsByHostName(String hostName)throws SQLException {
 	
 		List<Hosts> hosts = new ArrayList<Hosts>();
@@ -176,7 +176,9 @@ public class HostsDao{
 	}
 	
 	
-	
+	public Hosts Update (Hosts newHost) {
+		return null;
+	}
 	
 	public Hosts delete(Hosts host) throws SQLException {
 		
