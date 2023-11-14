@@ -224,8 +224,7 @@ public class ListingsDao {
 				String listingUrl = results.getString("ListingUrl");
 				String name = results.getString("Name");
 				String xlPhotoUrl = results.getString("XlPhotoUrl");
-				Listings.PropertyType propertyType = Listings.PropertyType.valueOf(
-						results.getString("PropertyType"));
+				Listings.PropertyType propertyType = Listings.PropertyType.fromString(results.getString("PropertyType"));
 
 				Listings listing = new Listings(listingId, host, listingUrl, name, xlPhotoUrl, propertyType);
 

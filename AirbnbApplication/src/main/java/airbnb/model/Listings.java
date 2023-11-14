@@ -9,7 +9,7 @@ public class Listings {
 	protected PropertyType propertyType;
 	
 	public enum PropertyType {
-		CAVE("CAVE"), EARTH_HOUSE("EARTH HOUSE"), ENTIRE_FLOOR("ENTIRE FLOOR"), TIPI("TIPI"), TRAIN("TRAIN"), TREEHOUSE("TREEHOUSE"), APARTMENT("APARTMENT"), HOUSE("HOUSE"), BED_BREAKFAST("BED & BREAKFAST)"), 
+		CAVE("CAVE"), EARTH_HOUSE("EARTH HOUSE"), ENTIRE_FLOOR("ENTIRE FLOOR"), TIPI("TIPI"), TRAIN("TRAIN"), TREEHOUSE("TREEHOUSE"), APARTMENT("APARTMENT"), HOUSE("HOUSE"), BED_BREAKFAST("BED & BREAKFAST"), 
 		HERITAGE_HOTEL("HERITAGE HOTEL (INDIA)"), HOTEL("HOTEL"), HUT("HUT"), VACATION_HOME("VACATION HOME"), CONDOMINIUM("CONDOMINIUM"), BOAT("BOAT"), VILLA("VILLA"), CASTLE("CASTLE"), IGLOO("IGLOO"), 
 		IN_LAW("IN-LAW"), ISLAND("ISLAND"), LIGHTHOUSE("LIGHTHOUSE"), VAN("VAN"), YURT("YURT"), TOWNHOUSE("TOWNHOUSE"), LOFT("LOFT"), CABIN("CABIN"), NATURE_LODGE("NATURE LODGE"), PARKING_SPACE("PARKING SPACE"), 
 		PENSION("PENSION (KOREA)"), CAR("CAR"), BOUTIQUE_HOTEL("BOUTIQUE HOTEL"), BUNGALOW("BUNGALOW"), CAMPER_RV("CAMPER/RV"), PLANE("PLANE"), RYOKAN("RYOKAN (JAPAN)"), TENT("TENT"), TIMESHARE("TIMESHARE"), 
@@ -20,6 +20,15 @@ public class Listings {
 		PropertyType(String displayName) {
 			this.displayName = displayName;
 		}
+		
+	    public static PropertyType fromString(String inputString) {
+	        for (PropertyType propertyType : values()) {
+	            if (propertyType.displayName.equalsIgnoreCase(inputString)) {
+	                return propertyType;
+	            }
+	        }
+	        throw new IllegalArgumentException("No enum constant with displayName: " + inputString);
+	    }
 	}
 	
 	// This constructor can be used for reading records from MySQL, where we have all fields,
