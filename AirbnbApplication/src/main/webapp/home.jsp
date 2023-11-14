@@ -52,19 +52,20 @@
 	    <script src="js/HomeScript.js"></script>
 	    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 	    <link href="css/bootstrap.css" rel="stylesheet">
-		<nav class="navbar navbar-expand-lg" style="background-color: #0a0a0b; height: 80px">
+	</head>
+	<body style="background-color: #0a0a0b">
+	<nav class="navbar navbar-expand-lg" style="background-color: #0a0a0b; height: 80px">
 		    <div class="container-fluid">
 		        <a class="navbar-brand me-3" href="#" style="color: white">
 		            <img src="resources/Logo.png" width="40" height="40">
 		            VizPro
 		        </a>
 		        <div class="d-flex ms-3">
+		        	<a class="btn btn-outline-primary" href="/AirbnbApplication/hostsInsights" role="button">Host Insights</a>
 		            <a class="btn" style="color: white;" data-bs-toggle="modal" data-bs-target="#newHostModal">Become a Host</a>
 		        </div>
 		    </div>
 		</nav>
-	</head>
-	<body style="background-color: #0a0a0b">
 	<div style="margin: 0 auto; width: 65%">
 	    <div id="carouselExampleFade" class="carousel slide carousel-fade">
 	        <div class="carousel-inner">

@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
   <display-name>AirbnbApplication</display-name>
   <welcome-file-list>
-    <welcome-file>/home</welcome-file>
+    <welcome-file>home.jsp</welcome-file>
   </welcome-file-list>
    <servlet>
    		<servlet-name>FindHosts</servlet-name>
@@ -12,12 +12,16 @@
 		<servlet-name>FindListings</servlet-name>
 		<servlet-class>airbnb.servlet.listings.HomeListings</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>ListingReviewServlet</servlet-name>
+		<servlet-class>airbnb.servlet.hosts.insights.ListingReviewServlet</servlet-class>
+	</servlet>
    <servlet-mapping>
-   <!-- 
-   		<servlet-name>FindHosts</servlet-name>
-   		<url-pattern>/home</url-pattern>
-    -->
    		<servlet-name>FindListings</servlet-name>
    		<url-pattern>/home</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+   		<servlet-name>ListingReviewServlet</servlet-name>
+   		<url-pattern>/hostsInsights</url-pattern>
    </servlet-mapping>
 </web-app>
