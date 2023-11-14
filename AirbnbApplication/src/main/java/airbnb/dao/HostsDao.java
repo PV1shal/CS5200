@@ -77,12 +77,10 @@ public class HostsDao{
 	}
 	
 	
-	public Hosts getHostsByHostId(int hostId, int offset)throws SQLException {
+	public Hosts getHostsByHostId(int hostId)throws SQLException {
 		String selectHost = "SELECT HostId, HostUrl, HostName, HostSince, HostResponseTime, HostResponseRate, HostTotalListingCount, HostVerification "
 				+ "FROM Hosts "
-				+ "WHERE HostId=? "
-				+ "LIMIT 20 "
-				+ "OFFSET ?;";
+				+ "WHERE HostId=? ;";
 		Connection connection = null;
 		PreparedStatement selectStmt = null;
 		ResultSet results = null;
@@ -90,7 +88,6 @@ public class HostsDao{
 			connection = connectionManager.getConnection();
 			selectStmt = connection.prepareStatement(selectHost);
 			selectStmt.setInt(1, hostId);
-			selectStmt.setInt(2, offset);
 			
 			results = selectStmt.executeQuery();
 					
