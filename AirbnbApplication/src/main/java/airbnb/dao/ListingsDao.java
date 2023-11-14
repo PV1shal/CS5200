@@ -202,4 +202,50 @@ public class ListingsDao {
 		}
 		return listings;
 	}
+	
+	public List<Listings> getAllListings() throws SQLException {
+		List<Listings> listings = new ArrayList<Listings>();
+		String selectListings =
+			"SELECT * " +
+			"FROM Listings " +
+			"LIMIT 10;";
+		Connection connection = null;
+		PreparedStatement selectStmt = null;
+		ResultSet results = null;
+		try {
+			connection = connectionManager.getConnection();
+			selectStmt = connection.prepareStatement(selectListings);
+			results = selectStmt.executeQuery();
+			HostsDao hostDao = HostsDao.getInstance();
+			while(results.next()) {
+				int listingId = results.getInt("ListingId");
+				int hostId = results.getInt("HostId");
+				Hosts host = hostDao.getHostsByHostId(hostId);
+				String listingUrl = results.getString("ListingUrl");
+				String name = results.getString("Name");
+				String xlPhotoUrl = results.getString("XlPhotoUrl");
+				Listings.PropertyType propertyType = Listings.PropertyType.valueOf(
+						results.getString("PropertyType"));
+
+				Listings listing = new Listings(listingId, host, listingUrl, name, xlPhotoUrl, propertyType);
+
+				listings.add(listing);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(connection != null) {
+				connection.close();
+			}
+			if(selectStmt != null) {
+				selectStmt.close();
+			}
+			if(results != null) {
+				results.close();
+			}
+		}
+		return listings;
+	}
+	
 }
