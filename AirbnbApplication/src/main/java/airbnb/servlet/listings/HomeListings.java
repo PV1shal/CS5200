@@ -35,8 +35,7 @@ public class HomeListings extends HttpServlet {
 
 		List<Listings> listings = new ArrayList<Listings>();
 		try {
-			Hosts host = hostsDao.getHostsByHostId(25188);
-			listings = listingsDao.getListingsForHost(host);
+			listings = listingsDao.getAllListings();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new IOException(e);

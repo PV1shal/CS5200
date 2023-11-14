@@ -100,17 +100,19 @@
 	            <c:forEach items="${listings}" var="listing" varStatus="loop">
 					<div class="col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 30px;">
 					    <div class="card card-default" style="background-color: #2C2C31; color: white; border-radius: 15px; height: 100%;">
-					        <img class="card-img-top" src="${listing.getXlPhotoUrl()}" onerror="this.src='resources/ImageError.png'" style="object-fit: cover; height: 300px">
+					        <img class="card-img-top" src="${listing.getXlPhotoUrl()}" onerror="this.src='resources/ImageError.png'" style="object-fit: cover; height: 200px">
 					        <div class="card-body">
-					            <h4 class="card-title">
-					                <c:out value="${listing.getName()}" />
-					            </h4>
+						      <h5 class="card-title">
+						        <div class="text-truncate">
+						          <c:out value="${listing.getName()}" />
+						        </div>
+						      </h5>
 					            <p class="card-text">
 					                <c:out value="${listing.getPropertyType()}" /><br>
 					                <c:out value="${listing.getHost().getHostName()}" />
 					            </p>
 					            <div class="card-footer text-center cardFooter" onclick="window.open('${listing.getListingUrl()}', '_blank')">
-								    View on Airbnb.
+								    View on Airbnb
 								</div>
 					        </div>
 					    </div>
