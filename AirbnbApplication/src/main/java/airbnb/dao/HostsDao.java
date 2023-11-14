@@ -78,9 +78,9 @@ public class HostsDao{
 	
 	
 	public Hosts getHostsByHostId(int hostId)throws SQLException {
-		String selectHost = "SELECT HostId, HostUrl, HostName, HostSince, HostResponseTime, HostResponseRate, HostTotalListingCount, HostVerification"
-				+ " FROM Hosts "
-				+ "WHERE HostId=?;";
+		String selectHost = "SELECT HostId, HostUrl, HostName, HostSince, HostResponseTime, HostResponseRate, HostTotalListingCount, HostVerification "
+				+ "FROM Hosts "
+				+ "WHERE HostId=? ;";
 		Connection connection = null;
 		PreparedStatement selectStmt = null;
 		ResultSet results = null;
@@ -88,11 +88,9 @@ public class HostsDao{
 			connection = connectionManager.getConnection();
 			selectStmt = connection.prepareStatement(selectHost);
 			selectStmt.setInt(1, hostId);
-		
 			
 			results = selectStmt.executeQuery();
-		
-			
+					
 			if(results.next()) {
 				int retrievedHostId = results.getInt("HostId");
 		        String hostUrl = results.getString("HostUrl");
@@ -124,14 +122,17 @@ public class HostsDao{
 		return null;
 	}
 	
-	
-	public List<Hosts> getHostsByHostName(String hostName)throws SQLException {
+
+	public List<Hosts> getHostsByHostName(String hostName, int offset)throws SQLException {
 	
 		List<Hosts> hosts = new ArrayList<Hosts>();
 		
-		String selectHost = "SELECT HostId, HostUrl, HostName, HostSince, HostResponseTime, HostResponseRate, HostTotalListingCount, HostVerification"
-				+ " FROM Hosts "
-				+ "WHERE HostName= ?;";
+		String selectHost = "SELECT HostId, HostUrl, HostName, HostSince, HostResponseTime, HostResponseRate, HostTotalListingCount, HostVerification "
+				+ "FROM Hosts "
+				+ "WHERE HostName= ? "
+				+ "LIMIT 20 "
+				+ "OFFSET ? ;";
+		
 		Connection connection = null;
 		PreparedStatement selectStmt = null;
 		ResultSet results = null;
@@ -139,8 +140,8 @@ public class HostsDao{
 			connection = connectionManager.getConnection();
 			selectStmt = connection.prepareStatement(selectHost);
 			selectStmt.setString(1, hostName);
+			selectStmt.setInt(2, offset);
 		
-			
 			results = selectStmt.executeQuery();
 		
 			
@@ -175,8 +176,96 @@ public class HostsDao{
 		return hosts;
 	}
 	
+	public List<Hosts> getHosts(int offset) throws SQLException {
+		
+		List<Hosts> hosts = new ArrayList<Hosts>();
+		
+		String selectHost = "SELECT HostId, HostUrl, HostName, HostSince, HostResponseTime, HostResponseRate, HostTotalListingCount, HostVerification "
+				+ "FROM Hosts "
+				+ "LIMIT 20 "
+				+ "OFFSET ? ;";
+		
+		Connection connection = null;
+		PreparedStatement selectStmt = null;
+		ResultSet results = null;
+		try {
+			connection = connectionManager.getConnection();
+			selectStmt = connection.prepareStatement(selectHost);
+			selectStmt.setInt(1, offset);
+		
+			results = selectStmt.executeQuery();
+		
+			
+			while(results.next()) {
+				int retrievedHostId = results.getInt("HostId");
+		        String hostUrl = results.getString("HostUrl");
+		        String hostName = results.getString("HostName");
+		        Date hostSince =  new Date(results.getTimestamp("HostSince").getTime());
+		        String hostResponseTime = results.getString("HostResponseTime");
+		        int hostResponseRate = results.getInt("HostResponseRate");
+		        int hostTotalListingCount = results.getInt("HostTotalListingCount");
+		        String hostVerification = results.getString("HostVerification");
+
+		        Hosts host = new Hosts(retrievedHostId, hostUrl, hostName, hostSince, hostResponseTime, hostResponseRate, hostTotalListingCount, hostVerification);
+		        
+				hosts.add(host);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(connection != null) {
+				connection.close();
+			}
+			if(selectStmt != null) {
+				selectStmt.close();
+			}
+			if(results != null) {
+				results.close();
+			}
+		}
+		return hosts;	
+	}
 	
-	
+	public Hosts Update (Hosts newHost)  throws SQLException {
+		String updateHost = "UPDATE Hosts "
+				+ "SET HostUrl = ?, HostName = ?, HostSince = ?, HostResponseTime = ?, HostResponseRate = ?,HostTotalListingCount = ?, HostVerification = ? "
+				+ "WHERE HostId = ?;";
+		
+
+		Connection connection = null;
+		PreparedStatement updateStmt = null;
+		try {
+			connection = connectionManager.getConnection();
+			updateStmt = connection.prepareStatement(updateHost);
+			
+			updateStmt.setString(1, newHost.getHostUrl());
+			updateStmt.setString(2, newHost.getHostName());
+			updateStmt.setTimestamp(3, new Timestamp(newHost.getHostSince().getTime()));
+			
+			updateStmt.setString(4, newHost.getHostResponseTime());
+			updateStmt.setInt(5, newHost.getHostResponseRate());
+			updateStmt.setInt(6, newHost.getHostTotalListingCount());
+			updateStmt.setString(7, newHost.getHostVerification());
+			
+			updateStmt.setInt(8, newHost.getHostId());
+
+			updateStmt.executeUpdate();
+			
+			return newHost;
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(connection != null) {
+				connection.close();
+			}
+			if(updateStmt != null) {
+				updateStmt.close();
+			}
+		}
+		
+	}
 	
 	public Hosts delete(Hosts host) throws SQLException {
 		
