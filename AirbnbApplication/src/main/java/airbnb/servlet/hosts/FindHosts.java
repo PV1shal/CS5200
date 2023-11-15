@@ -36,16 +36,14 @@ public class FindHosts extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		List<Hosts> hosts = new ArrayList<Hosts>();
-		// For now we can have this.
-		String hostName = "Alexandra";
 		try {
-			hosts = hostsDao.getHostsByHostName(hostName);
+			hosts = hostsDao.getHosts(10);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new IOException(e);
 		}
 		request.setAttribute("hosts", hosts);
-		request.getRequestDispatcher("/home.jsp").forward(request, response);
+		request.getRequestDispatcher("/AllHosts.jsp").forward(request, response);
 	}
 
 	/**
