@@ -65,5 +65,21 @@ public class EditHosts extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
+	
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    String hostIdParam = request.getParameter("hostId");
+	    int hostId = -1;
+	    if (hostIdParam != null && !hostIdParam.isEmpty()) {
+	        try {
+	            hostId = Integer.parseInt(hostIdParam);
+	        } catch (NumberFormatException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    try {
+			hostsDao.delete(hostId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

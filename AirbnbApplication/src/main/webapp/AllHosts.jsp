@@ -52,6 +52,24 @@
 	    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 	    <script src="js/HomeScript.js"></script>
 	    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	    <script>
+		    function deleteHost(hostId) {
+		        var confirmDelete = confirm("Are you sure you want to delete this host?");
+		        if (confirmDelete) {
+		            $.ajax({
+		                type: 'DELETE',
+		                url: '/AirbnbApplication/editHost' + '?' + $.param({"hostId": hostId}),
+		                success: function (data) {
+		                    location.reload();
+		                },
+		                error: function (error) {
+		                    alert("Error deleting host: " + error.responseText);
+		                }
+		            });
+		        }
+		    }
+		</script>
 	    <link href="css/bootstrap.css" rel="stylesheet">
 	</head>
 	<body style="background-color: #0a0a0b">
@@ -84,7 +102,9 @@
 				        <div class="modal-content">
 				            <div class="modal-header">
 				                <h1 class="modal-title fs-5" id="editHostModalLabel">Edit <b>${host.hostName}</b></h1>
-				                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				                <div>
+				                	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				                </div>
 				            </div>
 				            <div class="modal-body">
 				                <form id="editHostForm" action="/AirbnbApplication/editHost" method="post">
@@ -109,6 +129,13 @@
 				                        <input type="text" class="form-control" id="hostResponseTime" name="hostResponseTime" value="${host.getHostResponseTime()}">
 				                    </div>
 					                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					                <button type="button" class="btn btn-danger" onclick="deleteHost(${host.getHostId()})">
+									    Delete
+									    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+									        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+									        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+									    </svg>
+									</button>
 					                <button type="submit" class="btn btn-primary">Save changes</button>
 				                </form>
 				            </div>
