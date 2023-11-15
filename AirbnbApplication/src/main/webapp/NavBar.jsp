@@ -42,7 +42,6 @@
           <div class="mb-3">
             <label for="hostSince" class="form-label">Host Since</label>
             <input type="text" class="form-control" id="hostSince" name="hostSince">
-            <!-- Adjust the input type and format based on your needs, e.g., date picker -->
           </div>
           <div class="mb-3">
             <label for="hostResponseTime" class="form-label">Response Time</label>
