@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <a class="navbar-brand me-3" href="/AirbnbApplication/home" style="color: white">
             <img src="resources/Logo.png" width="40" height="40">
-            VizPro
+            AllAirbnb
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
 	      <ul class="navbar-nav">
