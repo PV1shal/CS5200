@@ -100,7 +100,7 @@ public class ListingAdditionalInfoDao {
     }
 
     public ListingAdditionalInfo delete(ListingAdditionalInfo listingAdditionalInfo) throws SQLException {
-        String deleteListingAdditionalInfo = "DELETE FROM ListingAdditionalInfo WHERE ListingId?;";
+        String deleteListingAdditionalInfo = "DELETE FROM ListingAdditionalInfo WHERE ListingId=?;";
         Connection connection = null;
         PreparedStatement deleteStmt = null;
 
