@@ -267,7 +267,7 @@ public class HostsDao{
 		
 	}
 	
-	public Hosts delete(Hosts host) throws SQLException {
+	public Hosts delete(int hostId) throws SQLException {
 		
 		String deleteHost = "DELETE FROM Hosts WHERE HostId=?;";
 		Connection connection = null;
@@ -275,7 +275,7 @@ public class HostsDao{
 		try {
 			connection = connectionManager.getConnection();
 			deleteStmt = connection.prepareStatement(deleteHost);
-			deleteStmt.setInt(1, host.getHostId());
+			deleteStmt.setInt(1, hostId);
 			deleteStmt.executeUpdate();
 
 			

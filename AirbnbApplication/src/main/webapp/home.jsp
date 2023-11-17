@@ -45,7 +45,7 @@
 	        .cardFooter {
 	        	background-color: cornflowerblue !important; 
 	        	color: black !important;
-	        	border-radius: 25px !important;
+	        	border-radius: 5px !important;
 	        }
 	    </style>
 	    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -54,18 +54,7 @@
 	    <link href="css/bootstrap.css" rel="stylesheet">
 	</head>
 	<body style="background-color: #0a0a0b">
-	<nav class="navbar navbar-expand-lg" style="background-color: #0a0a0b; height: 80px">
-		    <div class="container-fluid">
-		        <a class="navbar-brand me-3" href="#" style="color: white">
-		            <img src="resources/Logo.png" width="40" height="40">
-		            VizPro
-		        </a>
-		        <div class="d-flex ms-3">
-		        	<a class="btn btn-outline-primary" href="/AirbnbApplication/hostsInsights" role="button">Host Insights</a>
-		            <a class="btn" style="color: white;" data-bs-toggle="modal" data-bs-target="#newHostModal">Become a Host</a>
-		        </div>
-		    </div>
-		</nav>
+	<%@include file="NavBar.jsp" %>
 	<div style="margin: 0 auto; width: 65%">
 	    <div id="carouselExampleFade" class="carousel slide carousel-fade">
 	        <div class="carousel-inner">
@@ -93,63 +82,62 @@
 				</svg>
 			</button>
 	    </div>
-	    <!-- Hosts -->
 	</div>
-	    <div class="container-fluid" style="margin-top: 50%; padding-left: 3%; padding-right: 3%" id="hosts">
-	        <div class="row">
-	            <c:forEach items="${listings}" var="listing" varStatus="loop">
-					<div class="col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 30px;">
-					    <div class="card card-default" style="background-color: #2C2C31; color: white; border-radius: 15px; height: 100%;">
-					        <img class="card-img-top" src="${listing.getXlPhotoUrl()}" onerror="this.src='resources/ImageError.png'" style="object-fit: cover; height: 200px">
-					        <div class="card-body">
-						      <h5 class="card-title">
-						        <div class="text-truncate">
-						          <c:out value="${listing.getName()}" />
-						        </div>
-						      </h5>
-					            <p class="card-text">
-					                <c:out value="${listing.getPropertyType()}" /><br>
-					                <c:out value="${listing.getHost().getHostName()}" />
-					            </p>
-					            <div class="card-footer text-center cardFooter" onclick="window.open('${listing.getListingUrl()}', '_blank')">
-								    View on Airbnb
-								</div>
+	
+<div class="row justify-content-center" style="margin-top: 25%; width: 100%">
+  <div class="col-md-8">
+    <div class="card center-card" style="width: 80%; background-color: rgba(0, 0, 0, 0); color: white;">
+      <div class="card-body">
+        <h1 class="card-title">Who We Are?</h1>
+        <p class="card-text">
+          AllAirbnb is a global overview of how Airbnb is really used in cities around the world. This
+          product provides in-depth filtering on Airbnb features to address complex queries like how many
+          listings are in a particular neighborhood and where they are located, or how many houses and
+          apartments are being rented out frequently to tourists and not to long-term residents? For
+          renters who are unhappy with basic filters provided on the Airbnb website, they can use
+          AllAirbnb to find out more specific information on the available properties in the area of interest.
+          Examples include knowing which hosts are running a business with multiple listings and where
+          they are? For hosts who want to evaluate the performance of their property, they will have
+          insight on the popularity and average rental price of other Airbnbs in the area so they can make
+          adjustments accordingly.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card center-card" style="width: 100%; background-color: rgba(0, 0, 0, 0); color: white;">
+      <div class="card-body text-center">
+        <img src="resources/AboutImage.png" class="img-fluid mb-3" style="object-fit: cover; width: 40%;" />
+      </div>
+    </div>
+  </div>
+</div>
+
+	
+    <div class="container-fluid" style="margin-top: 15%; padding-left: 3%; padding-right: 3%" id="hosts">
+        <div class="row">
+            <c:forEach items="${listings}" var="listing" varStatus="loop">
+				<div class="col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 30px;">
+				    <div class="card card-default" style="background-color: #2C2C31; color: white; border-radius: 15px; height: 100%;">
+				        <img class="card-img-top" src="${listing.getXlPhotoUrl()}" onerror="this.src='resources/ImageError.png'" style="object-fit: cover; height: 200px">
+				        <div class="card-body">
+					      <h5 class="card-title">
+					        <div class="text-truncate">
+					          <c:out value="${listing.getName()}" />
 					        </div>
-					    </div>
-					</div>
-	            </c:forEach>
-	        </div>
-	    </div>
-	    
-	    <div class="modal fade" id="newHostModal" aria-hidden="true">
-	    	<div class="modal-dialog modal-dialog-centered">
-	    		<div class="modal-content">
-	    			<div class="modal-header">
-	    				<h5 class="modal-title">
-	    					Become a Host!
-	    				</h5>
-	    			</div>
-	    			<div class="modal-body">
-						<form>
-						  <div class="mb-3">
-						    <label for="exampleInputEmail1" class="form-label">Email address</label>
-						    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-						    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-						  </div>
-						  <div class="mb-3">
-						    <label for="exampleInputPassword1" class="form-label">Password</label>
-						    <input type="password" class="form-control" id="exampleInputPassword1">
-						  </div>
-						  <div class="mb-3 form-check">
-						    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-						    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-						  </div>
-				          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						  <button type="submit" class="btn btn-primary">Submit</button>
-						</form>
-	    			</div>
-	    		</div>
-	    	</div>
-	    </div>
+					      </h5>
+				            <p class="card-text">
+				                <c:out value="${listing.getPropertyType()}" /><br>
+				                <c:out value="${listing.getHost().getHostName()}" />
+				            </p>
+				            <div class="card-footer text-center cardFooter" onclick="window.open('${listing.getListingUrl()}', '_blank')">
+							    View on Airbnb
+							</div>
+				        </div>
+				    </div>
+				</div>
+            </c:forEach>
+        </div>
+    </div>
 	</body>
 </html>
