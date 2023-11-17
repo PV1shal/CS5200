@@ -93,7 +93,6 @@ public class ListingsDao {
 			deleteStmt.setInt(1, listing.getListingId());
 			deleteStmt.executeUpdate();
 
-			// Return null so the caller can no longer operate on the BlogPosts instance.
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
