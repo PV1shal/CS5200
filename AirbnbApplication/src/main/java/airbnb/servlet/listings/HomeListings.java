@@ -17,7 +17,7 @@ import airbnb.dao.ListingsDao;
 import airbnb.model.Hosts;
 import airbnb.model.Listings;
 
-@WebServlet("/HomeLisintgs")
+@WebServlet("/HomeListings")
 public class HomeListings extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected ListingsDao listingsDao;

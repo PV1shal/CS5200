@@ -1,8 +1,5 @@
 package airbnb.model;
 
-import lombok.ToString;
-
-@ToString
 public class Reviews {
     protected int listingId;
     protected int numberOfReviews;
@@ -110,4 +107,14 @@ public class Reviews {
     public void setListings(Listings listings) {
         this.listings = listings;
     }
+
+	@Override
+	public String toString() {
+		return "Reviews [listingId=" + listingId + ", numberOfReviews=" + numberOfReviews + ", reviewScoresAccuracy="
+				+ reviewScoresAccuracy + ", reviewScoresRating=" + reviewScoresRating + ", reviewScoresCleanliness="
+				+ reviewScoresCleanliness + ", reviewScoresCheckin=" + reviewScoresCheckin
+				+ ", reviewScoresCommunication=" + reviewScoresCommunication + ", reviewScoresLocation="
+				+ reviewScoresLocation + ", reviewScoresValue=" + reviewScoresValue + ", reviewsPerMonth="
+				+ reviewsPerMonth + ", listings=" + listings + "]";
+	}
 }
