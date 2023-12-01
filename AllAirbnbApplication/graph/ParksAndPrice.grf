@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="alexandertsao" created="Tue Nov 28 17:32:00 PST 2023" guiVersion="6.2.1.3" id="1701222928148" licenseCode="CLP1DNORTH67258620EX" name="ParksAndPrice" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata3">
+<Record fieldDelimiter=";" name="AvePrices" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="Zipcode" size="255" type="string"/>
+<Field length="14" name="AvePrice" scale="4" size="15" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="ParkCountsAndAvePrice" recordDelimiter="\n" type="delimited">
+<Field name="Zipcode" type="string"/>
+<Field name="AvePrice" type="decimal"/>
+<Field name="ParkCount" type="integer"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="," name="Parks" previewAttachment="${DATAIN_DIR}/Play_Area_With_ZipCode.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="X" type="number"/>
+<Field name="Y" type="number"/>
+<Field name="OBJECTID" type="integer"/>
+<Field name="PROPNAME" type="string"/>
+<Field name="ADDRESS" type="string"/>
+<Field name="DIVISION" type="string"/>
+<Field name="ADA" type="string"/>
+<Field name="GIS_EDT_DT" type="string"/>
+<Field name="LATITUDE" type="number"/>
+<Field name="LONGITUDE" type="number"/>
+<Field name="POINT_X" type="number"/>
+<Field name="POINT_Y" type="number"/>
+<Field name="PMAID" scale="1" type="decimal"/>
+<Field name="LOCID" scale="1" type="decimal"/>
+<Field name="AMWO_ID" type="string"/>
+<Field name="RES1" type="string"/>
+<Field name="RES2" type="string"/>
+<Field name="GLOBALID" type="string"/>
+<Field name="GIS_CREATOR" type="string"/>
+<Field name="GIS_CRT_DT" type="string"/>
+<Field name="GIS_EDITOR" type="string"/>
+<Field name="SDQL" type="string"/>
+<Field eofAsDelimiter="true" name="Zipcode" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="ParksAndPrices" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="ZipCode" type="string"/>
+<Field name="AvePrice" type="decimal"/>
+<Field name="ParksId" type="integer"/>
+</Record>
+</Metadata>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC1" jdbcSpecific="MYSQL" name="AllAirbnb" password="password" type="JDBC" user="root"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="377" id="Note0" textColor="444444" width="229" x="-11" y="-48">
+<attr name="text"><![CDATA[h3. Extract
+]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="370" id="Note1" textColor="444444" width="235" x="292" y="-44">
+<attr name="text"><![CDATA[h3. Transform
+]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="372" id="Note2" textColor="444444" width="219" x="584" y="-45">
+<attr name="text"><![CDATA[h3. Load
+]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node aggregateKey="ZipCode;AvePrice" guiName="Aggregate" guiX="355" guiY="159" id="AGGREGATE" mapping="$Zipcode:=$ZipCode;$AvePrice:=$AvePrice;$ParkCount:=count();" sorted="false" type="AGGREGATE"/>
+<Node dataPolicy="lenient" dbConnection="JDBC1" guiName="DatabaseReader" guiX="27" guiY="228" id="DATABASE_READER" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[SELECT AllAirbnb.PropertyLocations.Zipcode,  AVG(CASE WHEN Price != -1 THEN Price END) 
+FROM AllAirbnb.ListingPricings LEFT OUTER JOIN AllAirbnb.PropertyLocations ON AllAirbnb.ListingPricings.ListingId = AllAirbnb.PropertyLocations.ListingId
+WHERE AllAirbnb.PropertyLocations.Zipcode LIKE '981__'
+GROUP BY AllAirbnb.PropertyLocations.Zipcode
+ORDER BY AllAirbnb.PropertyLocations.Zipcode]]></attr>
+</Node>
+<Node dbConnection="JDBC1" dbTable="ParkCountAndAvePrice" fieldMap="$Zipcode:=Zipcode;$AvePrice:=AvePrice;$ParkCount:=ParkCount;" guiName="DatabaseWriter" guiX="601" guiY="4" id="DATABASE_WRITER1" type="DB_OUTPUT_TABLE"/>
+<Node guiName="ExtHashJoin" guiX="355" guiY="29" id="EXT_HASH_JOIN" joinKey="$Zipcode=$Zipcode" type="EXT_HASH_JOIN">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.ZipCode = $in.0.Zipcode;
+	$out.0.AvePrice = $in.1.AvePrice;
+	$out.0.ParksId = $in.0.OBJECTID;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node existingSheetsActions="DO_NOTHING" fileURL="${DATAOUT_DIR}/output.xlsx" guiName="SpreadsheetDataWriter" guiX="601" guiY="204" id="SPREADSHEET_DATA_WRITER" type="SPREADSHEET_WRITER" writeMode="OVERWRITE_SHEET_IN_MEMORY">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapping>
+    <globalAttributes>
+        <orientation>VERTICAL</orientation>
+        <step>1</step>
+        <writeHeader>true</writeHeader>
+    </globalAttributes>
+    <defaultSkip>1</defaultSkip>
+    <headerGroups>
+        <headerGroup skip="1">
+            <autoMappingType>ORDER</autoMappingType>
+            <headerRanges>
+                <headerRange begin="A1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>AvePrice</cloverField>
+            <headerRanges>
+                <headerRange begin="B1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>Zipcode</cloverField>
+            <headerRanges>
+                <headerRange begin="C1"/>
+            </headerRanges>
+        </headerGroup>
+    </headerGroups>
+</mapping>
+]]></attr>
+</Node>
+<Node dataPolicy="lenient" fileURL="${DATAIN_DIR}/Play_Area_With_ZipCode.csv" guiName="UniversalDataReader" guiX="17" guiY="29" id="UNIVERSAL_DATA_READER" quoteCharacter="&quot;" type="DATA_READER"/>
+<Edge fromNode="AGGREGATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge15" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="DATABASE_WRITER1:0"/>
+<Edge fromNode="AGGREGATE:1" guiBendpoints="" guiRouter="Manhattan" id="Edge17" inPort="Port 0 (input)" metadata="Metadata1" outPort="Port 1 (out)" toNode="SPREADSHEET_DATA_WRITER:0"/>
+<Edge fromNode="DATABASE_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 1 (slave)" metadata="Metadata3" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN:1"/>
+<Edge fromNode="EXT_HASH_JOIN:0" guiBendpoints="" guiRouter="Manhattan" id="Edge14" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="AGGREGATE:0"/>
+<Edge fromNode="UNIVERSAL_DATA_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge13" inPort="Port 0 (driver)" metadata="Metadata0" outPort="Port 0 (output)" toNode="EXT_HASH_JOIN:0"/>
+</Phase>
+</Graph>

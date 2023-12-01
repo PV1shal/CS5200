@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="mengdong" created="Tue Nov 28 21:20:10 PST 2023" guiVersion="6.2.1.3" id="1701236060573" licenseCode="Unlicensed" name="new-graph" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata5">
+<Record fieldDelimiter="|" name="ArtProject" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="zipcode" type="string"/>
+<Field name="projectCount" type="integer"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2">
+<Record fieldDelimiter="|" name="count" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="zipcode" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="|" name="joined" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="Zipcode" type="string"/>
+<Field name="ProjectCount" type="integer"/>
+<Field name="ListingPrice" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata7">
+<Record fieldDelimiter="|" name="newTable" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="Zipcode" type="string"/>
+<Field name="ProjectCount" type="integer"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata6">
+<Record fieldDelimiter="|" name="output" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="Zipcode" type="string"/>
+<Field name="ProjectCount" type="integer"/>
+<Field name="ListingPrice" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter=";" name="propertylocations" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="Zipcode" size="255" type="string"/>
+<Field length="14" name="AveragePrice" scale="4" size="15" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3">
+<Record fieldDelimiter="," name="Public_Art_Data_With_ZipCode" previewAttachment="${DATAIN_DIR}/Public_Art_Data_With_ZipCode.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="true" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="Field1" type="string"/>
+<Field name="property" type="string"/>
+<Field name="Field3" type="string"/>
+<Field name="Field4" type="string"/>
+<Field name="Field5" type="string"/>
+<Field name="Field6" type="string"/>
+<Field name="Field7" type="string"/>
+<Field name="Field8" type="string"/>
+<Field name="Field9" type="string"/>
+<Field name="Field10" type="string"/>
+<Field name="Field11" type="string"/>
+<Field name="Field12" type="string"/>
+<Field name="Field13" type="number"/>
+<Field name="Field14" type="number"/>
+<Field name="Field15" type="string"/>
+<Field eofAsDelimiter="true" name="zipcode" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata4">
+<Record fieldDelimiter="|" name="ZipCodeCount" recordDelimiter="\n" type="delimited">
+<Field name="ZipCode" type="string"/>
+</Record>
+</Metadata>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC0" jdbcSpecific="MYSQL" name="NewConnection" type="JDBC" user="root"/>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC3" jdbcSpecific="MYSQL" name="NewConnection" type="JDBC" user="root"/>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC4" jdbcSpecific="MYSQL" name="NewConnection" type="JDBC"/>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC5" jdbcSpecific="MYSQL" name="NewConnection" password="password" type="JDBC" user="root2"/>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC1" jdbcSpecific="MYSQL" name="NewConnection2" type="JDBC" user="root"/>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC2" jdbcSpecific="MYSQL" name="NewConnection3" type="JDBC" user="root"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node aggregateKey="zipcode" guiName="Aggregate" guiX="242" guiY="306" id="AGGREGATE" mapping="$zipcode:=$zipcode;$projectCount:=count();" sorted="false" type="AGGREGATE"/>
+<Node batchSize="1000" commit="1000" dbConnection="JDBC5" dbTable="ArtCountByZipcode" fieldMap="$zipcode:=Zipcode;$projectCount:=ProjectCount;" guiName="DatabaseWriter" guiX="453" guiY="306" id="DATABASE_WRITER1" type="DB_OUTPUT_TABLE"/>
+<Node dataPolicy="lenient" fileURL="${DATAIN_DIR}/Public_Art_Data_With_ZipCode.csv" guiName="UniversalDataReader" guiX="49" guiY="294" id="UNIVERSAL_DATA_READER" numRecords="10000" quoteCharacter="&quot;" type="DATA_READER"/>
+<Edge fromNode="AGGREGATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 0 (out)" toNode="DATABASE_WRITER1:0"/>
+<Edge fromNode="UNIVERSAL_DATA_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge19" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (output)" toNode="AGGREGATE:0"/>
+</Phase>
+<Phase number="1">
+<Node dbConnection="JDBC5" guiName="DatabaseReader" guiX="725" guiY="185" id="DATABASE_READER" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[SELECT AllAirbnb.PropertyLocations.Zipcode, AVG(CASE WHEN Price != -1 THEN Price END) 
+FROM AllAirbnb.ListingPricings LEFT OUTER JOIN AllAirbnb.PropertyLocations ON AllAirbnb.ListingPricings.ListingId = AllAirbnb.PropertyLocations.ListingId
+WHERE AllAirbnb.PropertyLocations.Zipcode LIKE '981__'
+GROUP BY AllAirbnb.PropertyLocations.Zipcode
+ORDER BY AllAirbnb.PropertyLocations.Zipcode;]]></attr>
+</Node>
+<Node dataPolicy="lenient" dbConnection="JDBC5" guiName="DatabaseReader" guiX="725" guiY="328" id="DATABASE_READER2" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[SELECT Zipcode, ProjectCount From ALLAirbnb.ArtCountByZipcode 
+ORDER BY Zipcode]]></attr>
+</Node>
+<Node dbConnection="JDBC5" dbTable="ArtCount" fieldMap="$Zipcode:=Zipcode;$ProjectCount:=ProjectCount;$ListingPrice:=ListingPrice;" guiName="DatabaseWriter" guiX="1170" guiY="256" id="DATABASE_WRITER" type="DB_OUTPUT_TABLE"/>
+<Node guiName="ExtHashJoin" guiX="980" guiY="249" id="EXT_HASH_JOIN" joinKey="$Zipcode=$Zipcode" type="EXT_HASH_JOIN">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.Zipcode = $in.0.Zipcode;
+	$out.0.ListingPrice = $in.0.AveragePrice;
+	$out.0.ProjectCount = $in.1.ProjectCount;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge fromNode="DATABASE_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge23" inPort="Port 0 (driver)" metadata="Metadata0" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN:0"/>
+<Edge fromNode="DATABASE_READER2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge24" inPort="Port 1 (slave)" metadata="Metadata7" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN:1"/>
+<Edge fromNode="EXT_HASH_JOIN:0" guiBendpoints="" guiRouter="Manhattan" id="Edge25" inPort="Port 0 (in)" metadata="Metadata6" outPort="Port 0 (out)" toNode="DATABASE_WRITER:0"/>
+</Phase>
+<Phase number="2">
+<Node dbConnection="JDBC5" guiName="DatabaseReader" guiX="69" guiY="481" id="DATABASE_READER1" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[SELECT Zipcode, ProjectCount, ListingPrice FROM ALLAirbnb.ArtCount ORDER BY Zipcode]]></attr>
+</Node>
+<Node existingSheetsActions="DO_NOTHING" fileURL="${DATAOUT_DIR}/ex3a.xlsx" guiName="SpreadsheetDataWriter" guiX="345" guiY="481" id="SPREADSHEET_DATA_WRITER" type="SPREADSHEET_WRITER" writeMode="OVERWRITE_SHEET_IN_MEMORY">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapping>
+    <globalAttributes>
+        <orientation>VERTICAL</orientation>
+        <step>1</step>
+        <writeHeader>true</writeHeader>
+    </globalAttributes>
+    <defaultSkip>1</defaultSkip>
+    <headerGroups>
+        <headerGroup skip="1">
+            <cloverField>Zipcode</cloverField>
+            <headerRanges>
+                <headerRange begin="A1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>ProjectCount</cloverField>
+            <headerRanges>
+                <headerRange begin="B1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>ListingPrice</cloverField>
+            <headerRanges>
+                <headerRange begin="C1"/>
+            </headerRanges>
+        </headerGroup>
+    </headerGroups>
+</mapping>
+]]></attr>
+</Node>
+<Edge fromNode="DATABASE_READER1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge27" inPort="Port 0 (input)" metadata="Metadata1" outPort="Port 0 (out)" toNode="SPREADSHEET_DATA_WRITER:0"/>
+</Phase>
+</Graph>

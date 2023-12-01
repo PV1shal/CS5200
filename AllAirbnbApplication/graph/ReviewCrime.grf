@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="jason" created="Mon Nov 27 14:29:44 PST 2023" guiVersion="6.2.1.3" id="1701234403596" licenseCode="CLP1DNORTH39435691EX" name="ReviewCrime" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata2" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="|" name="Joined" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="Zipcode" type="string"/>
+<Field length="12" name="AverageRating" scale="4" trim="true" type="decimal"/>
+<Field length="12" name="CrimeRate" scale="2" trim="true" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3">
+<Record fieldDelimiter=";" name="RatingCrime" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="Zipcode" size="255" type="string"/>
+<Field length="14" name="AverageRating" scale="4" size="10" type="decimal"/>
+<Field length="12" name="CrimeRate" scale="2" size="10" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1">
+<Record fieldDelimiter="," name="ZipcodeCrimeRate" previewAttachment="${DATAIN_DIR}/seattle_prop_crime_rate.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\r\n" skipSourceRows="1" type="delimited">
+<Field name="Zipcode" type="string"/>
+<Field eofAsDelimiter="true" name="CrimeRate" type="decimal"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter=";" name="ZipcodeRating" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="Zipcode" size="255" type="string"/>
+<Field length="14" name="AverageRating" scale="4" size="15" type="decimal"/>
+</Record>
+</Metadata>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC1" jdbcSpecific="MYSQL" name="DWConnection" password="password" type="JDBC" user="root"/>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC0" jdbcSpecific="MYSQL" name="NewConnection" password="password" type="JDBC" user="root"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="556" id="Note1" textColor="444444" width="210" x="641" y="280">
+<attr name="text"><![CDATA[h3. Transform]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="552" id="Note0" textColor="444444" width="332" x="298" y="282">
+<attr name="text"><![CDATA[h3. Extract
+]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="558" id="Note2" textColor="444444" width="283" x="900" y="278">
+<attr name="text"><![CDATA[h3. Load]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node dbConnection="JDBC0" guiName="DatabaseReader" guiX="386" guiY="368" id="DATABASE_READER" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[SELECT AllAirbnb.PropertyLocations.Zipcode, AVG(CASE WHEN ReviewScoresLocation != -1 THEN ReviewScoresLocation END) 
+FROM AllAirbnb.Reviews LEFT OUTER JOIN AllAirbnb.PropertyLocations ON AllAirbnb.Reviews.ListingId = AllAirbnb.PropertyLocations.ListingId
+WHERE AllAirbnb.PropertyLocations.Zipcode LIKE '981__'
+GROUP BY AllAirbnb.PropertyLocations.Zipcode
+ORDER BY AllAirbnb.PropertyLocations.Zipcode]]></attr>
+</Node>
+<Node dbConnection="JDBC1" dbTable="RatingCrime" fieldMap="$Zipcode:=Zipcode;$AverageRating:=AverageRating;$CrimeRate:=CrimeRate;" guiName="DatabaseWriter" guiX="959" guiY="432" id="DATABASE_WRITER" type="DB_OUTPUT_TABLE"/>
+<Node guiName="ExtHashJoin" guiX="675" guiY="432" id="EXT_HASH_JOIN" joinKey="$Zipcode=$Zipcode" type="EXT_HASH_JOIN">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.Zipcode = $in.0.Zipcode;
+	$out.0.AverageRating = $in.0.AverageRating;
+	$out.0.CrimeRate = $in.1.CrimeRate;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node dataPolicy="lenient" fileURL="${DATAIN_DIR}/seattle_prop_crime_rate.csv" guiName="UniversalDataReader" guiX="366" guiY="515" id="UNIVERSAL_DATA_READER" skipFirstLine="true" type="DATA_READER"/>
+<Edge fromNode="DATABASE_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (driver)" metadata="Metadata0" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN:0"/>
+<Edge fromNode="EXT_HASH_JOIN:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="DATABASE_WRITER:0"/>
+<Edge fromNode="UNIVERSAL_DATA_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 1 (slave)" metadata="Metadata1" outPort="Port 0 (output)" toNode="EXT_HASH_JOIN:1"/>
+</Phase>
+<Phase number="1">
+<Node dbConnection="JDBC0" guiName="DatabaseReader" guiX="386" guiY="677" id="DATABASE_READER1" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[SELECT Zipcode, AverageRating, CrimeRate
+FROM AllAirbnb.RatingCrime
+WHERE CrimeRate < 1000
+ORDER BY Zipcode]]></attr>
+</Node>
+<Node existingSheetsActions="CLEAR_SHEETS" fileURL="${DATAOUT_DIR}/RatingCrime.xlsx" guiName="SpreadsheetDataWriter" guiX="959" guiY="677" id="SPREADSHEET_DATA_WRITER" type="SPREADSHEET_WRITER" writeMode="OVERWRITE_SHEET_IN_MEMORY">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapping>
+    <globalAttributes>
+        <orientation>VERTICAL</orientation>
+        <step>1</step>
+        <writeHeader>true</writeHeader>
+    </globalAttributes>
+    <defaultSkip>1</defaultSkip>
+    <headerGroups>
+        <headerGroup skip="1">
+            <cloverField>Zipcode</cloverField>
+            <headerRanges>
+                <headerRange begin="A1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>AverageRating</cloverField>
+            <headerRanges>
+                <headerRange begin="B1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>CrimeRate</cloverField>
+            <headerRanges>
+                <headerRange begin="C1"/>
+            </headerRanges>
+        </headerGroup>
+    </headerGroups>
+</mapping>
+]]></attr>
+</Node>
+<Edge fromNode="DATABASE_READER1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (input)" metadata="Metadata3" outPort="Port 0 (out)" toNode="SPREADSHEET_DATA_WRITER:0"/>
+</Phase>
+</Graph>
