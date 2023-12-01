@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="ambikakabra" created="Tue Nov 28 15:23:27 PST 2023" guiVersion="6.2.1.3" id="1701221585403" licenseCode="Unlicensed" name="AirQuality" showComponentDetails="true">
+<Global>
+<Metadata id="Metadata3">
+<Record collator_sensitivity="case_sensitivity" fieldDelimiter="|" name="AirbnbCity" recordDelimiter="\n" type="delimited"/>
+<Sql connection="JDBC1" sqlOptimization="true" sqlQuery="SELECT&#10;    PL.City,&#10;    COUNT(PL.ListingId) AS NumberOfProperties,&#10;    AVG(CASE WHEN LA.Availability365 != -1 THEN LA.Availability365 END) AS AvgAvailability365&#10;FROM&#10;    PropertyLocations PL&#10;JOIN&#10;    ListingAvailabilities LA ON PL.ListingId = LA.ListingId&#10;WHERE&#10;    PL.Country = 'United States'&#10;GROUP BY&#10;    PL.City;" unknownJdbcTypesAsString="true"/>
+</Metadata>
+<Metadata id="Metadata0">
+<Record fieldDelimiter="," name="AQI" previewAttachment="${DATAIN_DIR}/AQI.csv" previewAttachmentCharset="UTF-8" quoteChar="both" quotedStrings="false" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field label="Country" name="Country" type="string"/>
+<Field label="City" name="City" type="string"/>
+<Field label="AQI Value" name="AQI_Value" type="integer"/>
+<Field label="AQI Category" name="AQI_Category" type="string"/>
+<Field label="CO AQI Value" name="CO_AQI_Value" type="integer"/>
+<Field label="CO AQI Category" name="CO_AQI_Category" type="string"/>
+<Field label="Ozone AQI Value" name="Ozone_AQI_Value" type="integer"/>
+<Field label="Ozone AQI Category" name="Ozone_AQI_Category" type="string"/>
+<Field label="NO2 AQI Value" name="NO2_AQI_Value" type="integer"/>
+<Field label="NO2 AQI Category" name="NO2_AQI_Category" type="string"/>
+<Field label="PM2.5 AQI Value" name="PM2_5_AQI_Value" type="integer"/>
+<Field label="PM2.5 AQI Category" name="PM2_5_AQI_Category" type="string"/>
+<Field label="lat" name="lat" type="number"/>
+<Field eofAsDelimiter="true" label="lng" name="lng" type="number"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1" previewAttachmentCharset="UTF-8">
+<Record fieldDelimiter="|" name="Joined" previewAttachmentCharset="UTF-8" recordDelimiter="\n" type="delimited">
+<Field name="City" type="string"/>
+<Field name="AQIValue" trim="true" type="integer"/>
+<Field name="NumberOfProperties" trim="true" type="long"/>
+<Field length="14" name="AvgAvailability365" scale="4" trim="true" type="decimal"/>
+</Record>
+</Metadata>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC0" jdbcSpecific="MYSQL" name="NewConnection" password="password" type="JDBC" user="root2"/>
+<Connection database="MYSQL" dbURL="jdbc:mysql://localhost:3306/AllAirbnb" id="JDBC1" jdbcSpecific="MYSQL" name="NewConnection" password="password" type="JDBC" user="root2"/>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="411" id="Note0" textColor="444444" width="275" x="16" y="89">
+<attr name="text"><![CDATA[h3. EXTRACT]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="273" id="Note1" textColor="444444" width="345" x="332" y="91">
+<attr name="text"><![CDATA[h3. TRANSFORM]]></attr>
+</RichTextNote>
+<RichTextNote backgroundColor="FAF6D6" folded="false" fontSize="medium" height="404" id="Note2" textColor="444444" width="275" x="750" y="96">
+<attr name="text"><![CDATA[h3. LOAD]]></attr>
+</RichTextNote>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node dataPolicy="lenient" dbConnection="JDBC1" guiName="DatabaseReader" guiX="60" guiY="259" id="DATABASE_READER" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[SELECT
+    PL.City,
+    COUNT(PL.ListingId) AS NumberOfProperties,
+    AVG(CASE WHEN LA.Availability365 != -1 THEN LA.Availability365 END) AS AvgAvailability365
+FROM
+    PropertyLocations PL
+JOIN
+    ListingAvailabilities LA ON PL.ListingId = LA.ListingId
+WHERE
+    PL.Country = 'United States'
+GROUP BY
+    PL.City;
+]]></attr>
+</Node>
+<Node dbConnection="JDBC1" dbTable="CityAQI" fieldMap="$City:=City;$AQIValue:=AQIValue;$NumberOfProperties:=NumberOfProperties;$AvgAvailability365:=AvgAvailability365;" guiName="DatabaseWriter" guiX="791" guiY="195" id="DATABASE_WRITER" type="DB_OUTPUT_TABLE"/>
+<Node dedupKey="City(a)" guiName="Dedup" guiX="337" guiY="151" id="DEDUP" sorted="false" type="DEDUP"/>
+<Node guiName="ExtHashJoin" guiX="536" guiY="195" id="EXT_HASH_JOIN" joinKey="$City=$City" type="EXT_HASH_JOIN">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.City = $in.0.City;
+	$out.0.AQIValue = $in.0.AQI_Value;
+	$out.0.NumberOfProperties = $in.1.NumberOfProperties;
+	$out.0.AvgAvailability365 = $in.1.AvgAvailability365;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node dataPolicy="lenient" fileURL="${DATAIN_DIR}/AQI.csv" guiName="UniversalDataReader" guiX="50" guiY="151" id="UNIVERSAL_DATA_READER" skipFirstLine="true" type="DATA_READER"/>
+<Edge fromNode="DATABASE_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge4" inPort="Port 1 (slave)" metadata="Metadata3" outPort="Port 0 (out)" toNode="EXT_HASH_JOIN:1"/>
+<Edge fromNode="DEDUP:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (driver)" metadata="Metadata0" outPort="Port 0 (unique)" toNode="EXT_HASH_JOIN:0"/>
+<Edge fromNode="EXT_HASH_JOIN:0" guiBendpoints="" guiRouter="Manhattan" id="Edge32" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="DATABASE_WRITER:0"/>
+<Edge fromNode="UNIVERSAL_DATA_READER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge29" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (output)" toNode="DEDUP:0"/>
+</Phase>
+<Phase number="1">
+<Node dbConnection="JDBC1" guiName="DatabaseReader" guiX="72" guiY="375" id="DATABASE_READER1" type="DB_INPUT_TABLE">
+<attr name="sqlQuery"><![CDATA[SELECT
+    CITY,
+    AQIValue,
+    NumberOfProperties,
+    AvgAvailability365
+FROM
+    AllAirbnb.CityAQI
+ORDER BY
+    AQIValue ASC;]]></attr>
+</Node>
+<Node existingSheetsActions="CLEAR_SHEETS" fileURL="${DATAOUT_DIR}/CityAQI.xlsx" guiName="SpreadsheetDataWriter" guiX="791" guiY="375" id="SPREADSHEET_DATA_WRITER" type="SPREADSHEET_WRITER" writeMode="OVERWRITE_SHEET_IN_MEMORY">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mapping>
+    <globalAttributes>
+        <orientation>VERTICAL</orientation>
+        <step>1</step>
+        <writeHeader>true</writeHeader>
+    </globalAttributes>
+    <defaultSkip>1</defaultSkip>
+    <headerGroups>
+        <headerGroup skip="1">
+            <cloverField>City</cloverField>
+            <headerRanges>
+                <headerRange begin="A1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>AQIValue</cloverField>
+            <headerRanges>
+                <headerRange begin="B1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>NumberOfProperties</cloverField>
+            <headerRanges>
+                <headerRange begin="C1"/>
+            </headerRanges>
+        </headerGroup>
+        <headerGroup skip="1">
+            <cloverField>AvgAvailability365</cloverField>
+            <headerRanges>
+                <headerRange begin="D1"/>
+            </headerRanges>
+        </headerGroup>
+    </headerGroups>
+</mapping>
+]]></attr>
+</Node>
+<Edge fromNode="DATABASE_READER1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge33" inPort="Port 0 (input)" metadata="Metadata1" outPort="Port 0 (out)" toNode="SPREADSHEET_DATA_WRITER:0"/>
+</Phase>
+</Graph>
