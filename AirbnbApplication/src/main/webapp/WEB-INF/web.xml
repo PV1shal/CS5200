@@ -13,8 +13,12 @@
 		<servlet-class>airbnb.servlet.listings.HomeListings</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>ListingReviewServlet</servlet-name>
-		<servlet-class>airbnb.servlet.hosts.insights.ListingReviewServlet</servlet-class>
+		<servlet-name>HostInsightServlet</servlet-name>
+		<servlet-class>airbnb.servlet.hosts.insights.HostInsightServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ListingInsightServlet</servlet-name>
+		<servlet-class>airbnb.servlet.listings.insights.ListingInsightServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>CreateHost</servlet-name>
@@ -29,8 +33,12 @@
    		<url-pattern>/home</url-pattern>
    </servlet-mapping>
    <servlet-mapping>
-   		<servlet-name>ListingReviewServlet</servlet-name>
+   		<servlet-name>HostInsightServlet</servlet-name>
    		<url-pattern>/hostsInsights</url-pattern>
+   </servlet-mapping>
+    <servlet-mapping>
+   		<servlet-name>ListingInsightServlet</servlet-name>
+   		<url-pattern>/listingInsights</url-pattern>
    </servlet-mapping>
    <servlet-mapping>
    		<servlet-name>FindHosts</servlet-name>
