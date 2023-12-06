@@ -131,8 +131,12 @@ public class ListingsDao {
 				String listingUrl = results.getString("ListingUrl");
 				String name = results.getString("Name");
 				String xlPhotoUrl = results.getString("XlPhotoUrl");
-				Listings.PropertyType propertyType = Listings.PropertyType.valueOf(
-						results.getString("PropertyType"));
+				String propertyString = results.getString("PropertyType");
+				Listings.PropertyType propertyType = null;
+				if(propertyString != null) {
+					propertyType = Listings.PropertyType.valueOf(
+							Listings.PropertyType.fromString(propertyString).toString());
+				}
 				
 				Hosts host = hostDao.getHostsByHostId(hostId);
 				Listings listing = new Listings(resultListingId, host, listingUrl, name, xlPhotoUrl, propertyType);
@@ -245,5 +249,61 @@ public class ListingsDao {
 		}
 		return listings;
 	}
+	
+	public List<ListingFilter> getAllListingWithOtherTablesInfo()throws SQLException {
+    	List<ListingFilter> listingFilterInstancesList = new ArrayList<>();
+        String sql = "SELECT\n"
+        		+ "    L.Name AS ListingName,\n"
+        		+ "    PL.Street AS Street,\n"
+        		+ "    PL.NeighborhoodCleansed AS NeighborhoodCleansed,\n"
+        		+ "    PL.City AS City,\n"
+        		+ "    LAI.Amenities\n"
+        		+ "FROM\n"
+        		+ "    Listings L\n"
+        		+ "JOIN\n"
+        		+ "    PropertyLocations PL ON L.ListingId = PL.ListingId\n"
+        		+ "JOIN\n"
+        		+ "    ListingAdditionalInfo LAI ON L.ListingId = LAI.ListingId;\n"
+        		+ "";
+
+        Connection connection = null;
+        PreparedStatement selectStmt = null;
+        ResultSet results = null;
+        
+        try {
+            connection = connectionManager.getConnection();
+            selectStmt = connection.prepareStatement(sql);
+    
+            results = selectStmt.executeQuery();
+          
+            while(results.next()) {
+				String listingName = results.getString("ListingName");
+				String street = results.getString("Street");
+				String neighborhoodCleansed = results.getString("NeighborhoodCleansed");
+				String city = results.getString("City");
+		        String amenities = results.getString("Amenities");
+		       
+		        ListingFilter listingFilterInstance = new ListingFilter(listingName, amenities, street, neighborhoodCleansed, city);
+
+		        listingFilterInstancesList.add(listingFilterInstance);
+			}
+            
+            return listingFilterInstancesList;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if(connection != null) {
+                connection.close();
+            }
+            if(selectStmt != null) {
+                selectStmt.close();
+            }
+            if(results != null) {
+                results.close();
+            }
+        }
+    }
 	
 }

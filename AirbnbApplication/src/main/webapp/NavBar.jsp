@@ -12,6 +12,7 @@
 	      </ul>
 	    </div>
         <div class="d-flex ms-3">
+        	<a class="btn btn-outline-primary ms-3" href="/AirbnbApplication/search" role="button">Apply filters</a>
         	<a class="btn btn-outline-primary ms-3" href="/AirbnbApplication/hostsInsights" role="button">Host Insights</a>
         	<a class="btn btn-outline-primary ms-3" href="/AirbnbApplication/listingInsights" role="button">Listing Insights</a>
             <a class="btn" style="color: white;" data-bs-toggle="modal" data-bs-target="#newHostModal">Become a Host</a>
