@@ -28,6 +28,10 @@
 		<servlet-name>EditHosts</servlet-name>
 		<servlet-class>airbnb.servlet.hosts.EditHosts</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>SearchServlet</servlet-name>
+		<servlet-class>airbnb.servlet.filtering.SearchServlet</servlet-class>
+	</servlet>
    <servlet-mapping>
    		<servlet-name>FindListings</servlet-name>
    		<url-pattern>/home</url-pattern>
@@ -51,5 +55,9 @@
    <servlet-mapping>
    		<servlet-name>EditHosts</servlet-name>
    		<url-pattern>/editHost</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+   		<servlet-name>SearchServlet</servlet-name>
+   		<url-pattern>/search</url-pattern>
    </servlet-mapping>
 </web-app>
