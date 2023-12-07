@@ -33,11 +33,6 @@
 	            <label for="hostName">Host Name:</label>
 	            <input type="text" name="hostName" class="form-control" value="${fn:escapeXml(param.hostName)}">
 	        </div>
-	        
-	        <div class="form-group">
-	            <label for="listingName">Host Name:</label>
-	            <input type="text" name="hostName" class="form-control" value="${fn:escapeXml(param.hostName)}">
-	        </div>
 	
 	        <div class="form-group">
 	            <label for="hostResponseTime">Host Response Time:</label>
@@ -66,6 +61,11 @@
 	        </div>
 	        
 	        <div class="form-group">
+	            <label for="listingName">Listing Name:</label>
+	            <input type="text" name="listingName" class="form-control" value="${fn:escapeXml(param.listingName)}">
+	        </div>
+	        
+	        <div class="form-group">
 	            <label for="amenities">Amenities:</label>
 	            <input type="text" name="amenities" class="form-control" value="${fn:escapeXml(param.amenities)}">
 	        </div>
@@ -85,8 +85,8 @@
 	                <option value="tipi" ${param.propertyType == 'tipi' ? 'selected' : ''}>Tipi</option>
 	                <option value="train" ${param.propertyType == 'train' ? 'selected' : ''}>Train</option>
 	                <option value="tree_house" ${param.propertyType == 'tree_house' ? 'selected' : ''}>Tree House</option>
-	                <option value="apartment" ${param.propertyType == 'apartment' ? 'selected' : ''}>apartment</option>
-	                <option value="house" ${param.propertyType == 'house' ? 'selected' : ''}>house</option>
+	                <option value="apartment" ${param.propertyType == 'apartment' ? 'selected' : ''}>Apartment</option>
+	                <option value="house" ${param.propertyType == 'house' ? 'selected' : ''}>House</option>
 	                <option value="bed_breakfast" ${param.propertyType == 'bed_breakfast' ? 'selected' : ''}>Bed and Breakfast</option>
 	                <option value="heritage_hotel" ${param.propertyType == 'heritage_hotel' ? 'selected' : ''}>Heritage Hotel</option>
 	                <option value="hotel" ${param.propertyType == 'hotel' ? 'selected' : ''}>Hotel</option>

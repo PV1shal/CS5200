@@ -32,6 +32,7 @@ public class SearchServlet extends HttpServlet {
 	private static final String PARAM_PROPERTYTYPE = "propertyType";
 	private static final String PARAM_AMENITIES = "amenities";
 	private static final String PARAM_PROPERTY_LOCATION = "propertyLocation";
+	private static final String PARAM_LISTING_NAME = "listingName";
 	
 	private Map<String, String> responseTimeMap = Map.of(
 	        "within_a_day", "within a day",
@@ -127,6 +128,7 @@ public class SearchServlet extends HttpServlet {
 	}
 
 	private List<ListingFilter> getFilteredListings(HttpServletRequest request) throws SQLException {
+		String listingName = request.getParameter(PARAM_LISTING_NAME);		
 		String propertyType = request.getParameter(PARAM_PROPERTYTYPE);
 		String propertyAmenities = request.getParameter(PARAM_AMENITIES);
 		String propertyLocation = request.getParameter(PARAM_PROPERTY_LOCATION);
@@ -134,6 +136,13 @@ public class SearchServlet extends HttpServlet {
 		
 		List<ListingFilter> filteredListingsResult = listingsDao.getAllListingWithOtherTablesInfo();
 		boolean hasFilter = false;
+		
+		if(listingName != null && !listingName.trim().isEmpty()) {
+			hasFilter = true;
+			filteredListingsResult = filteredListingsResult.stream()
+			        .filter(listing -> listing.getListingName().toLowerCase().contains(listingName.toLowerCase()))
+			        .toList();
+		}
 	
 		if (propertyType != null && !propertyType.trim().isEmpty()) {
 			String responsePropertyType = propertyTypeMap.getOrDefault(propertyType.toUpperCase(), "");
