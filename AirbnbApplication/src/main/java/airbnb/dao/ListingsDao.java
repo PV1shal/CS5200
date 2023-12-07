@@ -254,6 +254,7 @@ public class ListingsDao {
     	List<ListingFilter> listingFilterInstancesList = new ArrayList<>();
         String sql = "SELECT\n"
         		+ "    L.Name AS ListingName,\n"
+        		+ "	   L.PropertyType AS PropertyType,\n"
         		+ "    PL.Street AS Street,\n"
         		+ "    PL.NeighborhoodCleansed AS NeighborhoodCleansed,\n"
         		+ "    PL.City AS City,\n"
@@ -278,12 +279,16 @@ public class ListingsDao {
           
             while(results.next()) {
 				String listingName = results.getString("ListingName");
+				Listings.PropertyType propertyType = null;
+				if (results.getString("PropertyType") != null) {
+					propertyType = Listings.PropertyType.fromString(results.getString("PropertyType"));
+				}
 				String street = results.getString("Street");
 				String neighborhoodCleansed = results.getString("NeighborhoodCleansed");
 				String city = results.getString("City");
 		        String amenities = results.getString("Amenities");
 		       
-		        ListingFilter listingFilterInstance = new ListingFilter(listingName, amenities, street, neighborhoodCleansed, city);
+		        ListingFilter listingFilterInstance = new ListingFilter(listingName, propertyType, amenities, street, neighborhoodCleansed, city);
 
 		        listingFilterInstancesList.add(listingFilterInstance);
 			}

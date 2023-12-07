@@ -2,6 +2,7 @@ package airbnb.servlet.filtering;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ public class SearchServlet extends HttpServlet {
 	private static final String PARAM_RESPONSE_RATE = "hostResponseRate";
 	private static final String PARAM_TOTAL_LISTING_COUNT = "hostTotalListingCount";
 	private static final String PARAM_VERIFICATION = "hostVerification";
+	private static final String PARAM_PROPERTYTYPE = "propertyType";
 	private static final String PARAM_AMENITIES = "amenities";
 	private static final String PARAM_PROPERTY_LOCATION = "propertyLocation";
 	
@@ -37,12 +39,63 @@ public class SearchServlet extends HttpServlet {
 	        "within_an_hour", "within an hour",
 	        "a_few_days_or_more", "a few days or more"
 	);
-       
+	
+	private HashMap<String, String> propertyTypeMap = new HashMap<>();
+	protected void populateMap() {
+		propertyTypeMap.put("CAVE", "CAVE");
+		propertyTypeMap.put("EARTH_HOUSE", "EARTH HOUSE");
+		propertyTypeMap.put("ENTIRE_FLOOR", "ENTIRE FLOOR");
+	    propertyTypeMap.put("TIPI", "TIPI");
+	    propertyTypeMap.put("TRAIN", "TRAIN");
+	    propertyTypeMap.put("TREEHOUSE", "TREEHOUSE");
+	    propertyTypeMap.put("APARTMENT", "APARTMENT");
+	    propertyTypeMap.put("HOUSE", "HOUSE");
+	    propertyTypeMap.put("BED_BREAKFAST", "BED & BREAKFAST");
+	    propertyTypeMap.put("HERITAGE_HOTEL", "HERITAGE HOTEL (INDIA)");
+	    propertyTypeMap.put("HOTEL", "HOTEL");
+	   	propertyTypeMap.put("HUT", "HUT");
+	   	propertyTypeMap.put("VACATION_HOME", "VACATION HOME");
+	   	propertyTypeMap.put("CONDOMINIUM", "CONDOMINIUM");
+	   	propertyTypeMap.put("BOAT", "BOAT");
+	   	propertyTypeMap.put("VILLA", "VILLA");
+	   	propertyTypeMap.put("CASTLE", "CASTLE");
+	   	propertyTypeMap.put("IGLOO", "IGLOO");
+	    propertyTypeMap.put("IN_LAW", "IN-LAW");
+	   	propertyTypeMap.put("ISLAND", "ISLAND");
+	   	propertyTypeMap.put("LIGHTHOUSE", "LIGHTHOUSE");
+	    propertyTypeMap.put("VAN", "VAN");
+	   	propertyTypeMap.put("YURT", "YURT");
+	   	propertyTypeMap.put("TOWNHOUSE", "TOWNHOUSE");
+	   	propertyTypeMap.put("LOFT", "LOFT");
+	    propertyTypeMap.put("CABIN", "CABIN");
+	   	propertyTypeMap.put("NATURE_LODGE", "NATURE LODGE");
+	   	propertyTypeMap.put("PARKING_SPACE", "PARKING SPACE");
+	   	propertyTypeMap.put("PENSION", "PENSION (KOREA)");
+	    propertyTypeMap.put("CAR", "CAR");
+	   	propertyTypeMap.put("BOUTIQUE_HOTEL", "BOUTIQUE HOTEL");
+	   	propertyTypeMap.put("BUNGALOW", "BUNGALOW");
+	   	propertyTypeMap.put("CAMPER_RV", "CAMPER/RV");
+	   	propertyTypeMap.put("PLANE", "PLANE");
+	    propertyTypeMap.put("RYOKAN", "RYOKAN (JAPAN)");
+	   	propertyTypeMap.put("TENT", "TENT");
+	   	propertyTypeMap.put("TIMESHARE", "TIMESHARE");
+	   	propertyTypeMap.put("CASA_PARTICULAR", "CASA PARTICULAR");
+	   	propertyTypeMap.put("HOSTEL", "HOSTEL");
+	    propertyTypeMap.put("DORM", "DORM");
+	   	propertyTypeMap.put("GUESTHOUSE", "GUESTHOUSE");
+	   	propertyTypeMap.put("GUEST_SUITE", "GUEST SUITE");
+	   	propertyTypeMap.put("SERVICED_APARTMENT", "SERVICED APARTMENT");
+	   	propertyTypeMap.put("CHALET", "CHALET");
+	    propertyTypeMap.put("OTHER", "OTHER");
+	}
+	
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
     public SearchServlet() {
         super();
+        populateMap();
         // TODO Auto-generated constructor stub
     }
 
@@ -74,12 +127,25 @@ public class SearchServlet extends HttpServlet {
 	}
 
 	private List<ListingFilter> getFilteredListings(HttpServletRequest request) throws SQLException {
+		String propertyType = request.getParameter(PARAM_PROPERTYTYPE);
 		String propertyAmenities = request.getParameter(PARAM_AMENITIES);
 		String propertyLocation = request.getParameter(PARAM_PROPERTY_LOCATION);
 		ListingsDao listingsDao = ListingsDao.getInstance();
 		
 		List<ListingFilter> filteredListingsResult = listingsDao.getAllListingWithOtherTablesInfo();
 		boolean hasFilter = false;
+	
+		if (propertyType != null && !propertyType.trim().isEmpty()) {
+			String responsePropertyType = propertyTypeMap.getOrDefault(propertyType.toUpperCase(), "");
+			System.out.println(responsePropertyType);
+			if (!responsePropertyType.isEmpty()) {
+				hasFilter = true;
+				filteredListingsResult = filteredListingsResult.stream()
+						.filter(listing -> listing.getPropertyType() != null && responsePropertyType.equalsIgnoreCase(listing.getPropertyType().getDisplayName()))
+						.toList();
+			}
+		}
+		
 		if(propertyAmenities != null && !propertyAmenities.trim().isEmpty()) {
 			hasFilter = true;
 			filteredListingsResult = filteredListingsResult.stream()

@@ -1,14 +1,18 @@
 package airbnb.model;
 
+import airbnb.model.Listings.PropertyType;
+
 public class ListingFilter {
 	private String listingName;
+	private PropertyType propertyType;
 	private String amenities;
 	private String street;
 	private String neighborhoodCleansed;
 	private String city;
 	
-	public ListingFilter(String listingName, String amenities, String street, String neighborhoodCleansed, String city) {
+	public ListingFilter(String listingName, PropertyType propertyType, String amenities, String street, String neighborhoodCleansed, String city) {
 		this.listingName = listingName;
+		this.propertyType = propertyType;
 		this.amenities = amenities;
 		this.street = street;
 		this.neighborhoodCleansed = neighborhoodCleansed;
@@ -19,6 +23,12 @@ public class ListingFilter {
 	}
 	public void setListingName(String listingName) {
 		this.listingName = listingName;
+	}
+	public PropertyType getPropertyType() {
+		return this.propertyType;
+	}
+	public void setPropertyType(PropertyType propertyType) {
+		this.propertyType = propertyType;
 	}
 	public String getAmenities() {
 		return amenities;
@@ -46,7 +56,7 @@ public class ListingFilter {
 	}
 	@Override
 	public String toString() {
-		return "ListingFilter [listingName=" + listingName + ", amenities=" + amenities + ", street=" + street
+		return "ListingFilter [listingName=" + listingName + ",propertType=" + propertyType + ", amenities=" + amenities + ", street=" + street
 				+ ", neighborhoodCleansed=" + neighborhoodCleansed + ", city=" + city + "]";
 	}
 	
