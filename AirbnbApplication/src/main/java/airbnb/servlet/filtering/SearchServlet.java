@@ -137,7 +137,6 @@ public class SearchServlet extends HttpServlet {
 	
 		if (propertyType != null && !propertyType.trim().isEmpty()) {
 			String responsePropertyType = propertyTypeMap.getOrDefault(propertyType.toUpperCase(), "");
-			System.out.println(responsePropertyType);
 			if (!responsePropertyType.isEmpty()) {
 				hasFilter = true;
 				filteredListingsResult = filteredListingsResult.stream()
