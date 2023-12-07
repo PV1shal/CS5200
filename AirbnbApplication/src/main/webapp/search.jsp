@@ -61,6 +61,11 @@
 	        </div>
 	        
 	        <div class="form-group">
+	            <label for="listingName">Listing Name:</label>
+	            <input type="text" name="listingName" class="form-control" value="${fn:escapeXml(param.listingName)}">
+	        </div>
+	        
+	        <div class="form-group">
 	            <label for="amenities">Amenities:</label>
 	            <input type="text" name="amenities" class="form-control" value="${fn:escapeXml(param.amenities)}">
 	        </div>
@@ -68,6 +73,58 @@
 	        <div class="form-group">
 	            <label for="propertyLocation">Property location:</label>
 	            <input type="text" name="propertyLocation" class="form-control" value="${fn:escapeXml(param.propertyLocation)}">
+	        </div>
+	        
+	        <div class="form-group">
+	            <label for="propertyType">Property type:</label>
+	            <select name="propertyType" class="form-control">
+	                <option value="" ${empty param.propertyType ? 'selected' : ''}>Select</option>
+	                <option value="cave" ${param.propertyType == 'cave' ? 'selected' : ''}>Cave</option>
+	                <option value="earth_house" ${param.propertyType == 'earth_house' ? 'selected' : ''}>Earth House</option>
+	                <option value="entire_floor" ${param.propertyType == 'entire_floor' ? 'selected' : ''}>Entire Floor</option>
+	                <option value="tipi" ${param.propertyType == 'tipi' ? 'selected' : ''}>Tipi</option>
+	                <option value="train" ${param.propertyType == 'train' ? 'selected' : ''}>Train</option>
+	                <option value="tree_house" ${param.propertyType == 'tree_house' ? 'selected' : ''}>Tree House</option>
+	                <option value="apartment" ${param.propertyType == 'apartment' ? 'selected' : ''}>Apartment</option>
+	                <option value="house" ${param.propertyType == 'house' ? 'selected' : ''}>House</option>
+	                <option value="bed_breakfast" ${param.propertyType == 'bed_breakfast' ? 'selected' : ''}>Bed and Breakfast</option>
+	                <option value="heritage_hotel" ${param.propertyType == 'heritage_hotel' ? 'selected' : ''}>Heritage Hotel</option>
+	                <option value="hotel" ${param.propertyType == 'hotel' ? 'selected' : ''}>Hotel</option>
+	                <option value="hut" ${param.propertyType == 'hut' ? 'selected' : ''}>Hut</option>
+	                <option value="vacation_home" ${param.propertyType == 'vacation_home' ? 'selected' : ''}>Vacation Home</option>
+	                <option value="condominium" ${param.propertyType == 'condominium' ? 'selected' : ''}>Condominium</option>
+	                <option value="boat" ${param.propertyType == 'boat' ? 'selected' : ''}>Boat</option>
+	                <option value="villa" ${param.propertyType == 'villa' ? 'selected' : ''}>Villa</option>
+	                <option value="castle" ${param.propertyType == 'castle' ? 'selected' : ''}>Castle</option>
+	                <option value="igloo" ${param.propertyType == 'igloo' ? 'selected' : ''}>Igloo</option>
+	                <option value="in_law" ${param.propertyType == 'in_law' ? 'selected' : ''}>In-law</option>
+	                <option value="island" ${param.propertyType == 'island' ? 'selected' : ''}>Island</option>
+	                <option value="lighthouse" ${param.propertyType == 'lighthouse' ? 'selected' : ''}>Lighthouse</option>
+	                <option value="van" ${param.propertyType == 'van' ? 'selected' : ''}>Van</option>
+	                <option value="yurt" ${param.propertyType == 'yurt' ? 'selected' : ''}>Yurt</option>
+	                <option value="townhouse" ${param.propertyType == 'townhouse' ? 'selected' : ''}>Townhouse</option>
+	                <option value="loft" ${param.propertyType == 'loft' ? 'selected' : ''}>Loft</option>
+	                <option value="cabin" ${param.propertyType == 'cabin' ? 'selected' : ''}>Cabin</option>
+	                <option value="nature_lodge" ${param.propertyType == 'nature_lodge' ? 'selected' : ''}>Nature Lodge</option>
+	                <option value="parking_space" ${param.propertyType == 'parking_space' ? 'selected' : ''}>Parking Space</option>
+	                <option value="pension" ${param.propertyType == 'pension' ? 'selected' : ''}>Pension</option>
+	                <option value="car" ${param.propertyType == 'car' ? 'selected' : ''}>Car</option>
+	                <option value="boutique_hotel" ${param.propertyType == 'boutique_hotel' ? 'selected' : ''}>Boutique Hotel</option>
+	                <option value="bungalow" ${param.propertyType == 'bungalow' ? 'selected' : ''}>Bungalow</option>
+	                <option value="camper_rv" ${param.propertyType == 'camper_rv' ? 'selected' : ''}>Camper/RV</option>
+	                <option value="plane" ${param.propertyType == 'plane' ? 'selected' : ''}>Plane</option>
+	                <option value="ryokan" ${param.propertyType == 'ryokan' ? 'selected' : ''}>Ryokan</option>
+	                <option value="tent" ${param.propertyType == 'tent' ? 'selected' : ''}>Tent</option>
+	                <option value="timeshare" ${param.propertyType == 'timeshare' ? 'selected' : ''}>Timeshare</option>
+	                <option value="casa_particular" ${param.propertyType == 'casa_particular' ? 'selected' : ''}>Casa Particular</option>
+	                <option value="hostel" ${param.propertyType == 'hostel' ? 'selected' : ''}>Hostel</option>
+	                <option value="dorm" ${param.propertyType == 'dorm' ? 'selected' : ''}>Dorm</option>
+	                <option value="guesthouse" ${param.propertyType == 'guesthouse' ? 'selected' : ''}>GuestHouse</option>
+	                <option value="guest_suite" ${param.propertyType == 'guest_suite' ? 'selected' : ''}>Guest Suite</option>
+	                <option value="serviced_apartment" ${param.propertyType == 'serviced_apartment' ? 'selected' : ''}>Serviced Apartment</option>
+	                <option value="chalet" ${param.propertyType == 'chalet' ? 'selected' : ''}>Chalet</option>
+	                <option value="other" ${param.propertyType == 'other' ? 'selected' : ''}>Other</option>   
+	            </select>
 	        </div>
 	
 	        <button type="submit" class="btn btn-primary">Filter</button>
@@ -112,6 +169,7 @@
 				                <th scope="col">Listing Name</th>
 				                <th scope="col">Amenities</th>
 				               	<th scope="col">Location</th>
+				               	<th scope="col">Property Type</th>
 										               
 				            </tr>
 		            	</c:when>
@@ -127,6 +185,7 @@
 		                		Neighborhood: <c:out value="${listing.getNeighborhoodCleansed()}" /><br/>
 		                		City: <c:out value="${listing.getCity()}" /><br/>
 		                	</td>
+		                	<td class="text-truncate"><c:out value="${listing.getPropertyType().getDisplayName()}" /></td>
 		                </tr>
 		            </c:forEach>
 		        </tbody>

@@ -21,6 +21,10 @@ public class Listings {
 			this.displayName = displayName;
 		}
 		
+		public String getDisplayName() {
+			return this.displayName;
+		}
+		
 	    public static PropertyType fromString(String inputString) {
 	        for (PropertyType propertyType : values()) {
 	            if (propertyType.displayName.equalsIgnoreCase(inputString)) {
