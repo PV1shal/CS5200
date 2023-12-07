@@ -34,6 +34,7 @@ public class ReviewsDao {
 
         try {
             connection = connectionManager.getConnection();
+            insertStmt = connection.prepareStatement(insertReviews);
             insertStmt.setInt(1, reviews.getNumberOfReviews());
             insertStmt.setInt(2, reviews.getReviewScoresRating());
             insertStmt.setInt(3, reviews.getReviewScoresAccuracy());
