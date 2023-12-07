@@ -10,9 +10,7 @@ import java.util.List;
 import airbnb.dao.ConnectionManager;
 import airbnb.model.insights.AvgAccommodatesByYear;
 import airbnb.model.insights.CityEarnings;
-import airbnb.model.insights.ListingCost;
 import airbnb.model.insights.ListingReview;
-import airbnb.model.insights.WirelessInternet;
 
 /**
  * The `HostInsightDAO` class is responsible for handling data access related to host insights on Airbnb.

@@ -1,11 +1,9 @@
 package airbnb.dao;
 
-import airbnb.model.Hosts;
 import airbnb.model.ListingAvailabilities;
 import airbnb.model.Listings;
 
 import java.sql.*;
-import java.util.Date;
 
 public class ListingAvailabilitiesDao {
 

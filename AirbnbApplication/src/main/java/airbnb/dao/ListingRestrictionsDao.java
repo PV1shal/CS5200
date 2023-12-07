@@ -1,8 +1,6 @@
 package airbnb.dao;
 
 import airbnb.model.*;
-import airbnb.model.ListingRestrictions.CancellationPolicy;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

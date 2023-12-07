@@ -10,8 +10,6 @@ import airbnb.model.Reviews;
 
 import java.sql.SQLException;
 
-import static airbnb.model.ListingCapacities.BedType.AIRBED;
-
 /**
  * Entry point of the application
  * main() runner

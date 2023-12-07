@@ -17,7 +17,6 @@ import airbnb.dao.HostsDao;
 import airbnb.dao.ListingsDao;
 import airbnb.model.Hosts;
 import airbnb.model.ListingFilter;
-import airbnb.model.insights.AvgAccommodatesByYear;
 
 /**
  * Servlet implementation class SearchServlet

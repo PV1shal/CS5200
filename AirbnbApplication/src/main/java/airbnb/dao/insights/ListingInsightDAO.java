@@ -10,7 +10,6 @@ import java.util.List;
 import airbnb.dao.ConnectionManager;
 import airbnb.model.insights.AmenitiesCount;
 import airbnb.model.insights.AveragePrice;
-import airbnb.model.insights.AvgAccommodatesByYear;
 import airbnb.model.insights.ListingCost;
 import airbnb.model.insights.RoomTypeCount;
 import airbnb.model.insights.WirelessInternet;
