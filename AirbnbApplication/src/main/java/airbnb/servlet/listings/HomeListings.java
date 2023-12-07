@@ -3,7 +3,6 @@ package airbnb.servlet.listings;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import airbnb.dao.HostsDao;
 import airbnb.dao.ListingsDao;
-import airbnb.model.Hosts;
 import airbnb.model.Listings;
 
 @WebServlet("/HomeListings")
