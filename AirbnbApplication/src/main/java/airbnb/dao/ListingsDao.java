@@ -258,15 +258,33 @@ public class ListingsDao {
         		+ "    PL.Street AS Street,\n"
         		+ "    PL.NeighborhoodCleansed AS NeighborhoodCleansed,\n"
         		+ "    PL.City AS City,\n"
-        		+ "    LAI.Amenities\n"
+        		+ "    LAI.Amenities,\n"
+        		+ "    LP.Price,\n"
+        		+ "    LP.SecurityDeposit,\n"
+        		+ "    LP.CleaningFee,\n"
+        		+ "    LR.CancellationPolicy,\n"
+        		+ "    LR.GuestsIncluded,\n"
+        		+ "    LR.MinimumNights,\n"
+        		+ "    LR.MaximumNights,\n"
+        		+ "    LC.BedType,\n"
+        		+ "    LC.RoomType,\n"
+        		+ "    LC.Accommodates,\n"
+        		+ "    LC.Bathrooms,\n"
+        		+ "    LC.Bedrooms,\n"
+        		+ "    LC.Beds\n"
         		+ "FROM\n"
         		+ "    Listings L\n"
         		+ "JOIN\n"
         		+ "    PropertyLocations PL ON L.ListingId = PL.ListingId\n"
         		+ "JOIN\n"
-        		+ "    ListingAdditionalInfo LAI ON L.ListingId = LAI.ListingId;\n"
+        		+ "    ListingAdditionalInfo LAI ON L.ListingId = LAI.ListingId\n"
+        		+ "JOIN\n"
+        		+ "    ListingPricings LP ON L.ListingId = LP.ListingId\n"
+        		+ "JOIN\n"
+        		+ "    ListingRestrictions LR ON L.ListingId = LR.ListingId\n"
+        		+ "JOIN\n"
+        		+ "    ListingCapacities LC ON L.ListingId = LC.ListingId\n"
         		+ "";
-
         Connection connection = null;
         PreparedStatement selectStmt = null;
         ResultSet results = null;
@@ -287,9 +305,24 @@ public class ListingsDao {
 				String neighborhoodCleansed = results.getString("NeighborhoodCleansed");
 				String city = results.getString("City");
 		        String amenities = results.getString("Amenities");
-		       
-		        ListingFilter listingFilterInstance = new ListingFilter(listingName, propertyType, amenities, street, neighborhoodCleansed, city);
-
+		        int price = results.getInt("Price");
+		        int securityDeposit = results.getInt("SecurityDeposit");
+		        int cleaningFee = results.getInt("CleaningFee");
+		        String cancellationPolicy  = results.getString("CancellationPolicy");
+		        int guestsIncluded = results.getInt("GuestsIncluded");
+		        int minimumNights = results.getInt("MinimumNights");
+		        int maximumNights = results.getInt("MaximumNights");
+		        String bedType  = results.getString("BedType");
+		        String roomType  = results.getString("RoomType");
+		        int accommodates = results.getInt("Accommodates");
+		        float bathrooms = results.getFloat("Bathrooms");
+		        int bedrooms = results.getInt("Bedrooms");
+		        int beds = results.getInt("Beds");
+			       
+		        ListingFilter listingFilterInstance = new ListingFilter(listingName, propertyType, amenities, street, neighborhoodCleansed, 
+						city, price, securityDeposit, cleaningFee, cancellationPolicy, guestsIncluded, minimumNights, 
+						maximumNights,bedType,roomType,accommodates,bathrooms,bedrooms,beds);
+		        
 		        listingFilterInstancesList.add(listingFilterInstance);
 			}
             
